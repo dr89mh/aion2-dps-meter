@@ -33,6 +33,8 @@ die Skill-Icons vom offiziellen Spieldaten-Server von NCSOFT zu laden (beides ab
 
 **Im Meter-Fenster**
 
+- Jede Zeile zeigt das **Klassen-Symbol** aus dem Spiel, jede Klasse hat **eine eigene Farbe**. Deine eigene Zeile hat
+  einen goldenen Rand und einen fett gedruckten Namen.
 - **Titel anklicken**: Kampf wählen (aktueller Kampf, alle Kämpfe zusammen, frühere Kämpfe).
 - **Reiter** Schaden / Heilung / Erlitten.
 - **Zeile anklicken**: Skill-Details dieses Spielers.
@@ -111,4 +113,5 @@ stammt aus HamMeter (docs/protocol.md) und aion2-dps-meter. Die Spieldaten (Skil
 [aion2-dps-meter](https://github.com/cyberbadger6969/aion2-dps-meter) von
 [A2Tools-DPS-Meter](https://github.com/taengu/A2Tools-DPS-Meter). Alles steht unter GPL-3.0, Spieldaten © NCSOFT. Die
 Skill-Icons liegen nicht im Repo: Das Programm lädt sie vom Spieldaten-Server von NCSOFT, die Icon-Namen folgen
-A2Tools-DPS-Meter. Icons © NCSOFT.
+A2Tools-DPS-Meter. Die Klassen-Symbole in `assets/classes` sind die offiziellen aus dem Spiel und stammen aus
+[HamMeter-Aion2](https://github.com/NennMichSchinken/HamMeter-Aion2). Icons © NCSOFT.

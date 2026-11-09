@@ -309,6 +309,12 @@ internal sealed class DetailForm : Form
         var color = ClassInfo.Color(v?.Class ?? 0);
         using (var b = new SolidBrush(color)) g.FillRectangle(b, 0, 0, Math.Max(3, K(4)), HeaderH);
         var x = K(14);
+        if (ClassInfo.Icon(v?.Class ?? 0) is not null)
+        {
+            var iconH = K(28);
+            ClassIcons.Draw(g, v!.Class, new Rectangle(x - K(2), (HeaderH - iconH) / 2, iconH, iconH));
+            x += iconH + K(6);
+        }
         var buttonsLeft = ClientSize.Width - 3 * K(30);
         var name = v?.Name ?? _name ?? "";
         var nameW = Math.Min(TextRenderer.MeasureText(name, _fName).Width, buttonsLeft - x - K(40));

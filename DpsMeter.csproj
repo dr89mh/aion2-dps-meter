@@ -8,7 +8,7 @@
     <UseWindowsForms>true</UseWindowsForms>
     <AssemblyName>DpsMeter</AssemblyName>
     <RootNamespace>DpsMeter</RootNamespace>
-    <Version>0.2.0</Version>
+    <Version>0.3.0</Version>
     <Product>DPS-Meter</Product>
     <AssemblyTitle>DPS-Meter für Aion 2</AssemblyTitle>
     <ApplicationHighDpiMode>PerMonitorV2</ApplicationHighDpiMode>
@@ -31,6 +31,7 @@
   <ItemGroup>
     <EmbeddedResource Include="data\*.json" LogicalName="data/%(Filename)%(Extension)" />
     <EmbeddedResource Include="assets\meter.ico" LogicalName="meter.ico" />
+    <EmbeddedResource Include="assets\classes\*.png" LogicalName="classes/%(Filename)%(Extension)" />
   </ItemGroup>
 
 </Project>

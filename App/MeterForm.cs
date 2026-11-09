@@ -299,16 +299,20 @@ internal sealed class MeterForm : Form
             var color = ClassInfo.Color(row.Class);
             using (var track = new SolidBrush(_hover == "row" + i ? Theme.Hover : Theme.Panel)) g.FillRectangle(track, r);
             var w = (int)(r.Width * (row.Value / (double)max));
-            using (var bar = new SolidBrush(Theme.Mix(Theme.Panel, color, row.IsSelf ? 0.62 : 0.46)))
+            // one colour per class, the same for everyone (you are marked by the gold edge and the bold name)
+            using (var bar = new SolidBrush(Theme.Mix(Theme.Panel, color, 0.56)))
                 g.FillRectangle(bar, r.X, r.Y, Math.Max(w, K(2)), r.Height);
             if (row.IsSelf)
                 using (var edge = new SolidBrush(Theme.Accent)) g.FillRectangle(edge, r.X, r.Y, Math.Max(2, K(2)), r.Height);
             var tx = r.X + K(6);
             var rank = (i + 1).ToString();
-            var rankW = K(20);
+            var rankW = K(18);
             Theme.StrShadow(g, rank, _fSmall, new Rectangle(tx - K(2), r.Y, rankW, r.Height), Theme.Alpha(Theme.Text, 190),
                 TextFormatFlags.Left | TextFormatFlags.VerticalCenter | TextFormatFlags.NoPrefix | TextFormatFlags.SingleLine);
             tx += rankW;
+            var iconH = r.Height - K(2);
+            ClassIcons.Badge(g, row.Class, new Rectangle(tx, r.Y + (r.Height - iconH) / 2, iconH, iconH), K(4));
+            tx += iconH + K(5);
             var numbersW = colRate + colTotal + colShare + K(6);
             var nameRect = new Rectangle(tx, r.Y, Math.Max(10, r.Right - numbersW - tx), r.Height);
             var nameFont = row.IsSelf ? _fBold : _fText;

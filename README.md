@@ -13,7 +13,8 @@ icons from NCSOFT's official game data server (both can be switched off).
 
 *Player names in the images are made up.*
 
-- **Meter:** a row per player in class colour with DPS, total, share and deaths. Tabs for damage, healing and damage
+- **Meter:** a row per player with the class icon of the game and one colour per class, with DPS, total, share and
+  deaths. Tabs for damage, healing and damage
   taken. A click on the fight title picks the fight: the current one, all fights together, or an earlier one.
 - **Fights are found by themselves.** Every boss gets its own fight, with its HP in the header. A fight ends when all
   enemies are dead or nothing hits for a few seconds.
@@ -95,6 +96,7 @@ Requires the .NET 10 SDK. Capture, TCP reassembly and framing come from the core
 | `App/MeterForm.cs`, `App/DetailForm.cs` | the meter overlay and the skill details |
 | `App/Updater.cs` | automatic updates from the GitHub releases |
 | `App/SkillIcons.cs` | skill icons from the game data CDN, cached locally |
+| `App/ClassIcons.cs`, `assets/classes/` | class icons of the game, embedded in the program |
 | `data/` | English and German skill, NPC and dungeon names and the icon table, built with `tools/make_data.py` |
 
 ## License
@@ -103,4 +105,5 @@ GPL-3.0. Skill, NPC and dungeon data come from
 [cyberbadger6969/aion2-dps-meter](https://github.com/cyberbadger6969/aion2-dps-meter) (GPL-3.0), which takes them from
 [A2Tools-DPS-Meter](https://github.com/taengu/A2Tools-DPS-Meter) (GPL-3.0). Packet layouts come from aion2-dps-meter and
 HamMeter-Aion2. Skill icons are not part of this repository: the program loads them from NCSOFT's game data server, the
-icon names follow A2Tools-DPS-Meter. Game content, names and icons belong to NCSOFT.
+icon names follow A2Tools-DPS-Meter. The class icons in `assets/classes` are the official ones of the game, taken from
+[HamMeter-Aion2](https://github.com/NennMichSchinken/HamMeter-Aion2). Game content, names and icons belong to NCSOFT.
