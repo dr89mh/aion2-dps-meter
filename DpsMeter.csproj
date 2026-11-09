@@ -1,0 +1,36 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net10.0-windows</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <UseWindowsForms>true</UseWindowsForms>
+    <AssemblyName>DpsMeter</AssemblyName>
+    <RootNamespace>DpsMeter</RootNamespace>
+    <Version>0.1.0</Version>
+    <Product>DPS-Meter</Product>
+    <AssemblyTitle>DPS-Meter für Aion 2</AssemblyTitle>
+    <ApplicationHighDpiMode>PerMonitorV2</ApplicationHighDpiMode>
+    <ApplicationIcon>assets\meter.ico</ApplicationIcon>
+    <!-- The Cube Radar submodule and the publish output are not sources of this project. -->
+    <DefaultItemExcludes>$(DefaultItemExcludes);external\**;dist\**</DefaultItemExcludes>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <!-- Keep WinForms names (Timer, Orientation, ...) out of the global namespace; UI files import them explicitly. -->
+    <Using Remove="System.Windows.Forms" />
+    <Using Remove="System.Drawing" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <!-- Capture, TCP reassembly, framing and LZ4 bundles come from the Cube Radar core (git submodule, same author, GPL-3.0). -->
+    <ProjectReference Include="external\aion2-cube-radar\src\CubeRadar.Core\CubeRadar.Core.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="data\*.json" LogicalName="data/%(Filename)%(Extension)" />
+    <EmbeddedResource Include="assets\meter.ico" LogicalName="meter.ico" />
+  </ItemGroup>
+
+</Project>
