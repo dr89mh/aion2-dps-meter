@@ -386,8 +386,13 @@ internal sealed class MeterContext : ApplicationContext
         base.ExitThreadCore();
     }
 
+    private bool _disposed;
+
+    /// <summary>Runs once: WinForms disposes the context after Application.Run, and the caller's using does it again.</summary>
     protected override void Dispose(bool disposing)
     {
+        if (_disposed) return;
+        _disposed = true;
         if (disposing)
         {
             _timer.Dispose();
