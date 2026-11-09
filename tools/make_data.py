@@ -6,6 +6,8 @@ from taengu/A2Tools-DPS-Meter and Kuroukihime/AIon2-Dps-Meter, see that folder's
   npcs-<lang>.json    NPC code -> {"n": name, "b": 1 boss, "d": dungeon id, "x": 1 training dummy}
   zones-<lang>.json   dungeon / raid zone id -> name (only English exists; German uses it too)
   heals.json          skill families that heal
+  skill-icons.json    class skill prefix (first four digits) -> icon name on the game data CDN, where it differs from
+                      the usual ICON_<class>_SKILL_<nnn>
 
 Run: python -I tools/make_data.py <path to aion2-dps-meter/data> <output data dir>"""
 import json, os, sys
@@ -56,3 +58,9 @@ for lang in ("en", "de"):
 heals = sorted({c - c % 10_000 for c in load("healing_skill_ids.json")})
 write("heals.json", heals)
 print("heals", heals)
+
+# class skill prefix (first four digits) -> icon file on the game data CDN, for skills whose icon does not follow the
+# ICON_<class>_SKILL_<nnn> pattern (A2Tools-DPS-Meter)
+icons = {k: v for k, v in (load("skill_icons.json") or {}).items() if k.isdigit() and len(k) == 4 and v}
+write("skill-icons.json", icons)
+print("icons", len(icons))

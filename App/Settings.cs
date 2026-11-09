@@ -28,6 +28,8 @@ public sealed class Settings
     /// <summary>"dps" per second or "total" amount as the main number of a row.</summary>
     public bool ShowTotal { get; set; }
     public bool Hidden { get; set; }
+    /// <summary>Skill icons in the details (downloaded once from the game data CDN of NCSOFT).</summary>
+    public bool SkillIcons { get; set; } = true;
     /// <summary>Install new versions from GitHub by itself (never during a fight or inside an instance).</summary>
     public bool AutoUpdate { get; set; } = true;
 

@@ -4,8 +4,8 @@
 
 A damage meter overlay for Aion 2, in the style of NotMeter and A2Tools: damage, healing and damage taken per player,
 and a click on a player opens their **skill details**. It only reads the network traffic of Aion 2 (Npcap, like
-Wireshark) and changes nothing in the game. Its only internet connection is the update check on GitHub (can be
-switched off).
+Wireshark) and changes nothing in the game. It goes online only for the update check on GitHub and to load the skill
+icons from NCSOFT's official game data server (both can be switched off).
 
 ![Meter overlay](docs/meter.png)
 
@@ -18,8 +18,9 @@ switched off).
 - **Fights are found by themselves.** Every boss gets its own fight, with its HP in the header. A fight ends when all
   enemies are dead or nothing hits for a few seconds.
 - **Skill details:** tiles (damage, DPS, share, hits, crit, back attack, perfect, double, multi hit, max hit, deaths),
-  DPS over the fight, and a sortable table of every skill with share, DPS, hits, crit %, back %, perfect %, double %,
-  multi hit %, average, max and misses. Damage over time has its own row. ◀ ▶ steps through the players.
+  DPS over the fight, and a sortable table of every skill **with its in-game icon** and share, DPS, hits, crit %,
+  back %, perfect %, double %, multi hit %, average, max and misses. Damage over time has its own row. ◀ ▶ steps
+  through the players.
 - **Summons, traps and effects** (spirits, Bittercold Wind, Divine Aura …) count for the player who cast them.
 - **Checked against the game:** on recordings of dungeon runs and the Ludra raid, the damage counted on a boss matches
   the HP it lost to 100.0–100.5 % (the rest is the overkill of the last hit).
@@ -46,7 +47,10 @@ The meter appears at the top right, plus an icon in the notification area (right
 | Ctrl+Alt+L | lock: clicks go through the meter to the game |
 
 Drag the header to move, drag the edges to resize, right-click for the menu: opacity, text size, fight end after x
-seconds, language, copy a summary, automatic updates.
+seconds, skill icons, language, copy a summary, automatic updates.
+
+**Skill icons** are loaded once from NCSOFT's game data server (`assets.playnccdn.com`) and kept in
+`%APPDATA%\DpsMeter\icons` (about 10 KB each). Menu → *Skill icons in the details* switches them off.
 
 **Updates** install themselves: the meter checks GitHub after the start and every 6 hours and installs a new version
 only while you are not in a fight or a dungeon, then restarts. Settings and the error log are in `%APPDATA%\DpsMeter`.
@@ -90,11 +94,13 @@ Requires the .NET 10 SDK. Capture, TCP reassembly and framing come from the core
 | `Meter/MeterEngine.cs` | fight detection, counting rules, views for the windows |
 | `App/MeterForm.cs`, `App/DetailForm.cs` | the meter overlay and the skill details |
 | `App/Updater.cs` | automatic updates from the GitHub releases |
-| `data/` | English and German skill, NPC and dungeon names, built with `tools/make_data.py` |
+| `App/SkillIcons.cs` | skill icons from the game data CDN, cached locally |
+| `data/` | English and German skill, NPC and dungeon names and the icon table, built with `tools/make_data.py` |
 
 ## License
 
 GPL-3.0. Skill, NPC and dungeon data come from
 [cyberbadger6969/aion2-dps-meter](https://github.com/cyberbadger6969/aion2-dps-meter) (GPL-3.0), which takes them from
 [A2Tools-DPS-Meter](https://github.com/taengu/A2Tools-DPS-Meter) (GPL-3.0). Packet layouts come from aion2-dps-meter and
-HamMeter-Aion2. Game content and names belong to NCSOFT.
+HamMeter-Aion2. Skill icons are not part of this repository: the program loads them from NCSOFT's game data server, the
+icon names follow A2Tools-DPS-Meter. Game content, names and icons belong to NCSOFT.

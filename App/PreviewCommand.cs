@@ -65,9 +65,12 @@ public static class PreviewCommand
         meter.Refresh(force: true);
         Save(meter, meter.Draw, Path.Combine(outDir, "meter-heilung.png"), w);
 
-        using var detail = new DetailForm(engine, settings) { Size = new Size(920, 560) };
+        using var icons = new SkillIcons(enabled: true);
+        using var detail = new DetailForm(engine, settings, icons) { Size = new Size(920, 560) };
         foreach (var (mode, name) in new[] { (Mode.Damage, "details.png"), (Mode.Taken, "details-erlitten.png") })
         {
+            if (engine.Detail(fight.Id, row.Entity, row.Name, mode) is { } d)
+                icons.FetchAsync(d.Skills.Select(s => s.Code)).Wait(TimeSpan.FromSeconds(60));
             detail.ShowForPreview(fight.Id, row.Entity, row.Name, mode);
             Save(detail, detail.Draw, Path.Combine(outDir, name), w);
         }

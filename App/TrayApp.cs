@@ -84,6 +84,7 @@ internal sealed class MeterContext : ApplicationContext
     private readonly ContextMenuStrip _menu;
     private readonly string? _replayName;
     private readonly Updater? _updater;
+    private readonly SkillIcons _icons;
     private volatile string _capture = "starting";
 
     public MeterContext(Settings settings, string? replayFile, double speed, bool afterUpdate)
@@ -96,7 +97,8 @@ internal sealed class MeterContext : ApplicationContext
         _pipe = new Pipeline(_engine);
 
         _meter = new MeterForm(_engine, _settings, Status);
-        _detail = new DetailForm(_engine, _settings);
+        _icons = new SkillIcons(_settings.SkillIcons);
+        _detail = new DetailForm(_engine, _settings, _icons);
         _menu = Theme.Menu();
         _menu.Opening += (_, _) => BuildMenu();
         BuildMenu();
@@ -321,6 +323,12 @@ internal sealed class MeterContext : ApplicationContext
                 _settings.QuietSeconds = v;
                 _settings.Apply(_engine);
             }));
+        _menu.Items.Add(Item(L.T("Skill icons in the details", "Skill-Icons in den Details"), () =>
+        {
+            _settings.SkillIcons = _icons.Enabled = !_settings.SkillIcons;
+            _settings.Save();
+            _detail.ApplySettings();
+        }, _settings.SkillIcons));
         _menu.Items.Add(Choice(L.T("Language", "Sprache"), new[] { ("Deutsch", "de"), ("English", "en") },
             L.Lang, v =>
             {
@@ -403,6 +411,7 @@ internal sealed class MeterContext : ApplicationContext
             _pipe.Dispose();
             _meter.Dispose();
             _detail.Dispose();
+            _icons.Dispose();
             _menu.Dispose();
             _cts.Dispose();
         }

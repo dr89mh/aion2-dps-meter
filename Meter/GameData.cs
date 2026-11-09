@@ -79,6 +79,11 @@ public sealed class GameData
     {
         var table = _skillNames[L.Lang];
         if (table.TryGetValue(code, out var n)) return n;
+        // theostones come as 7 digits (3000017), the table has them with a level digit added (30000171)
+        if (Skills.IsTheostone(code))
+            for (var level = 0u; level <= 9; level++)
+                if (table.TryGetValue(code * 10 + level, out n) || _skillNames["en"].TryGetValue(code * 10 + level, out n))
+                    return n;
         var family = Skills.Family(code);
         if (family != code && table.TryGetValue(family, out n)) return n;
         if (code % 10 != 0 && table.TryGetValue(code - code % 10, out n)) return n;
@@ -95,7 +100,8 @@ public static class Skills
     /// <summary>Player class skills: 8 digits, the first two are the class (10 = Elementalist spirit).</summary>
     public static bool IsClassSkill(uint code) => code is >= 10_000_000 and <= 19_999_999;
 
-    /// <summary>Theostones: usable by every class, the class must come from the actor.</summary>
+    /// <summary>Theostones: usable by every class, the class must come from the actor. On the wire they have 7 digits;
+    /// the game data lists them with an eighth (level) digit.</summary>
     public static bool IsTheostone(uint code) => code is >= 3_000_000 and <= 3_099_999;
 
     /// <summary>Pet / summon skills.</summary>

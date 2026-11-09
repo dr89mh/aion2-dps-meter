@@ -4,8 +4,8 @@
 
 Ein Schadensmesser als Overlay, ähnlich wie NotMeter oder A2Tools: Schaden, Heilung und erlittener Schaden
 pro Spieler, und per Klick die **Skill-Details** eines Spielers. Der Meter liest nur den Netzwerkverkehr von Aion 2 mit
-(Npcap, wie Wireshark) und verändert nichts am Spiel. Seine einzige Internetverbindung ist die Update-Prüfung bei
-GitHub (abschaltbar).
+(Npcap, wie Wireshark) und verändert nichts am Spiel. Ins Internet geht er nur für die Update-Prüfung bei GitHub und um
+die Skill-Icons vom offiziellen Spieldaten-Server von NCSOFT zu laden (beides abschaltbar).
 
 ![Meter-Fenster](docs/meter-de.png)
 
@@ -43,8 +43,8 @@ GitHub (abschaltbar).
 
 - Kacheln: Schaden, DPS, Anteil, Treffer, Krit, Rücken, Perfekt, Wucht, Mehrfach, größter Treffer, Tode.
 - DPS-Verlauf über den Kampf (5-Sekunden-Mittel, gestrichelt der Durchschnitt).
-- Tabelle aller Skills: Schaden, Anteil, DPS, Treffer, Krit %, Rücken %, Perfekt %, Wucht %, Mehrfach %, Ø, Max, Verfehlt.
-  Spaltenkopf anklicken = sortieren. DoT-Ticks stehen als eigene Zeile „(DoT)“.
+- Tabelle aller Skills **mit ihrem Icon aus dem Spiel**: Schaden, Anteil, DPS, Treffer, Krit %, Rücken %, Perfekt %,
+  Wucht %, Mehrfach %, Ø, Max, Verfehlt. Spaltenkopf anklicken = sortieren. DoT-Ticks stehen als eigene Zeile „(DoT)“.
 - ◀ ▶ blättern durch die Spieler des Kampfs.
 
 **Tasten**
@@ -55,8 +55,11 @@ GitHub (abschaltbar).
 | Strg+Alt+N | neuer Kampf |
 | Strg+Alt+L | fixieren / lösen (fixiert gehen Klicks durch das Meter ans Spiel) |
 
-Im Menü: Deckkraft, Textgröße, Kampfende nach x Sekunden, Sprache (Deutsch/English), Zusammenfassung kopieren,
-automatische Updates.
+Im Menü: Deckkraft, Textgröße, Kampfende nach x Sekunden, Skill-Icons, Sprache (Deutsch/English), Zusammenfassung
+kopieren, automatische Updates.
+
+**Skill-Icons** lädt der Meter einmal vom Spieldaten-Server von NCSOFT (`assets.playnccdn.com`) und legt sie in
+`%APPDATA%\DpsMeter\icons` ab (je etwa 10 KB). Abschalten im Menü unter „Skill-Icons in den Details“.
 
 **Updates** installieren sich von selbst: Der Meter fragt nach dem Start und alle 6 Stunden bei GitHub nach und
 installiert eine neue Version nur, wenn du gerade nicht kämpfst und in keinem Dungeon bist. Danach startet er neu.
@@ -106,4 +109,6 @@ Braucht das .NET-10-SDK.
 Mitschnitt, TCP-Zusammensetzung und Paketzerlegung kommen aus dem Cube Radar (Git-Submodul). Das Protokollwissen
 stammt aus HamMeter (docs/protocol.md) und aion2-dps-meter. Die Spieldaten (Skill-, NPC- und Dungeon-Namen) kommen über
 [aion2-dps-meter](https://github.com/cyberbadger6969/aion2-dps-meter) von
-[A2Tools-DPS-Meter](https://github.com/taengu/A2Tools-DPS-Meter). Alles steht unter GPL-3.0, Spieldaten © NCSOFT.
+[A2Tools-DPS-Meter](https://github.com/taengu/A2Tools-DPS-Meter). Alles steht unter GPL-3.0, Spieldaten © NCSOFT. Die
+Skill-Icons liegen nicht im Repo: Das Programm lädt sie vom Spieldaten-Server von NCSOFT, die Icon-Namen folgen
+A2Tools-DPS-Meter. Icons © NCSOFT.

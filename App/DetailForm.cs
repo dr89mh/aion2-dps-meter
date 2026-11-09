@@ -18,6 +18,7 @@ internal sealed class DetailForm : Form
 
     private readonly MeterEngine _engine;
     private readonly Settings _settings;
+    private readonly SkillIcons? _icons;
     private readonly System.Windows.Forms.Timer _timer = new() { Interval = 500 };
     private DetailView? _view;
     private int _fightId;
@@ -33,10 +34,16 @@ internal sealed class DetailForm : Form
     private float _k = 1;
     private Font _fName = null!, _fText = null!, _fBold = null!, _fSmall = null!, _fTile = null!, _fIcon = null!;
 
-    public DetailForm(MeterEngine engine, Settings settings)
+    public DetailForm(MeterEngine engine, Settings settings, SkillIcons? icons = null)
     {
         _engine = engine;
         _settings = settings;
+        _icons = icons;
+        if (icons is not null)
+            icons.IconReady += () =>
+            {
+                if (IsHandleCreated && Visible) BeginInvoke(Invalidate);
+            };
         FormBorderStyle = FormBorderStyle.None;
         ShowInTaskbar = false;
         TopMost = true;
@@ -210,7 +217,10 @@ internal sealed class DetailForm : Form
     private int TabsH => K(26);
     private int ChartH => Math.Clamp(ClientSize.Height / 5, K(60), K(110));
     private int TableTop => HeaderH + TilesH + TabsH + ChartH + K(12);
-    private int RowH => K(22);
+    private bool ShowIcons => _icons is { Enabled: true };
+
+    /// <summary>A bit taller with icons, so they are big enough to recognise.</summary>
+    private int RowH => K(ShowIcons ? 26 : 22);
     private int VisibleRows => Math.Max(1, (ClientSize.Height - TableTop - RowH - K(8)) / RowH);
 
     private IEnumerable<(string Id, Rectangle R, string Glyph)> Buttons()
@@ -448,6 +458,8 @@ internal sealed class DetailForm : Form
         _scroll = Math.Clamp(_scroll, 0, Math.Max(0, skills.Count - VisibleRows));
         var color = ClassInfo.Color(v.Class);
         var maxShare = skills.Count == 0 ? 1 : Math.Max(0.0001, skills.Max(s => s.Share));
+        // enemy skills (damage taken) have no icons: then no empty tiles either
+        var icons = ShowIcons && skills.Any(s => _icons!.IconName(s.Code) is not null);
         for (var n = 0; n < VisibleRows && _scroll + n < skills.Count; n++)
         {
             var s = skills[_scroll + n];
@@ -457,15 +469,24 @@ internal sealed class DetailForm : Form
                 using (var b = new SolidBrush(Theme.Hover)) g.FillRectangle(b, row);
             else if (n % 2 == 1)
                 using (var b = new SolidBrush(Theme.Alpha(Theme.Panel, 140))) g.FillRectangle(b, row);
-            // share bar under the skill name
+            // skill icon, then the share bar under the skill name
             var nameRect = rects[0].R;
-            var barW = (int)((nameRect.Width - K(8)) * (s.Share / maxShare));
+            var textX = nameRect.X;
+            if (icons)
+            {
+                var size = RowH - K(4);
+                PaintIcon(g, _icons!.Get(s.Code), new Rectangle(nameRect.X + K(3), y + K(2), size, size), s.Periodic);
+                textX += size + K(5);
+            }
+            var barW = (int)((nameRect.Right - textX - K(8)) * (s.Share / maxShare));
             using (var b = new SolidBrush(Theme.Alpha(color, 70)))
-                g.FillRectangle(b, nameRect.X + K(2), y + K(3), Math.Max(K(2), barW), RowH - K(6));
+                g.FillRectangle(b, textX + K(2), y + K(3), Math.Max(K(2), barW), RowH - K(6));
             for (var i = 0; i < rects.Count; i++)
             {
                 var (c, r) = rects[i];
-                var pad = new Rectangle(r.X + K(6), y, r.Width - K(12), RowH);
+                var pad = i == 0
+                    ? new Rectangle(textX + K(6), y, r.Right - textX - K(12), RowH)
+                    : new Rectangle(r.X + K(6), y, r.Width - K(12), RowH);
                 var font = i == 1 ? _fBold : _fText;
                 var fg = i == 0 && s.Periodic ? Theme.Mix(Theme.Text, color, 0.35) : Theme.Text;
                 Theme.Str(g, c.Text(s), font, pad, fg, c.Left ? Theme.Left : Theme.Right);
@@ -482,6 +503,31 @@ internal sealed class DetailForm : Form
         if (skills.Count == 0)
             Theme.Str(g, L.T("No skills in this tab.", "Keine Fähigkeiten in diesem Reiter."), _fText,
                 new Rectangle(0, TableTop + RowH, ClientSize.Width, RowH * 2), Theme.Dim, Theme.Center);
+    }
+
+    /// <summary>A skill icon with rounded corners and a thin frame; an empty tile while it loads or for enemy skills.
+    /// Damage-over-time rows show the icon a little dimmed.</summary>
+    private void PaintIcon(Graphics g, Image? icon, Rectangle r, bool periodic)
+    {
+        using var path = Theme.Rounded(r, K(4));
+        if (icon is null)
+        {
+            using var b = new SolidBrush(Theme.Header);
+            g.FillPath(b, path);
+        }
+        else
+        {
+            var state = g.Save();
+            g.SetClip(path);
+            g.InterpolationMode = InterpolationMode.HighQualityBicubic;
+            g.DrawImage(icon, r);
+            if (periodic)
+                using (var dim = new SolidBrush(Color.FromArgb(90, Theme.Back)))
+                    g.FillRectangle(dim, r);
+            g.Restore(state);
+        }
+        using var pen = new Pen(Theme.Alpha(Color.Black, 150), 1f);
+        g.DrawPath(pen, path);
     }
 
     // ----- input -----------------------------------------------------------------------------------------------------
